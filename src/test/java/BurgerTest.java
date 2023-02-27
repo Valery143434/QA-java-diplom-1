@@ -13,7 +13,7 @@ import static praktikum.IngredientType.FILLING;
 @RunWith(MockitoJUnitRunner.class)
 
 public class BurgerTest {
-    Burger burger;
+    private Burger burger;
 
     @Before
     public void before() {
@@ -26,8 +26,8 @@ public class BurgerTest {
         burger.setBuns(bun);
         buns.add(bun);
         int bunsSize = buns.size();
-        boolean actual = bunsSize > 0;
-        assertTrue("Ошибка", actual);
+        boolean actual = bunsSize != 0;
+        assertTrue("Ошибка: кол-во булочек не больше 0", actual);
     }
     @Test
     public void addIngredientTest() {
@@ -35,7 +35,7 @@ public class BurgerTest {
         burger.addIngredient(ingredient);
         int ingredientSize = burger.ingredients.size();
         boolean actual = ingredientSize != 0;
-        assertTrue("Ошибка", actual);
+        assertTrue("Ошибка: кол-во ингридиентов не больше 0", actual);
     }
     @Test
     public void removeIngredientTest() {
@@ -43,7 +43,7 @@ public class BurgerTest {
         burger.addIngredient(ingredient);
         int expectedResult = 0;
         burger.removeIngredient(0);
-        assertEquals(expectedResult, burger.ingredients.size());
+        assertEquals("Ошибка: кол-во ингридиентов больше 0", expectedResult, burger.ingredients.size());
     }
     @Test
     public void moveIngredientTest() {
@@ -54,8 +54,7 @@ public class BurgerTest {
         burger.addIngredient(newIngredient);
         burger.moveIngredient(0, 1);
         String expectedResult = "Sauce";
-        assertEquals("Ошибка", expectedResult,
-                burger.ingredients.get(1).getName());
+        assertEquals("Ошибка: ингридиенты не равны", expectedResult, burger.ingredients.get(1).getName());
     }
     @Test
     public void getPriceTest() {
@@ -63,7 +62,7 @@ public class BurgerTest {
         Mockito.when(bun.getPrice()).thenReturn(100f);
         burger.setBuns(bun);
         float expectedResult = 200;
-        assertEquals("Ошибка", expectedResult,
+        assertEquals("Ошибка: цены не равны", expectedResult,
                 burger.getPrice(), 0);
     }
     @Test
@@ -76,22 +75,16 @@ public class BurgerTest {
         burger.addIngredient(ingredient);
         Mockito.when(bun.getName()).thenReturn("black bun");
         Mockito.when(bun.getPrice()).thenReturn(100F);
-        burger.setBuns(bun);
+         burger.setBuns(bun);
         StringBuilder expected = new StringBuilder();
         expected.append(String.format("(==== %s ====)%n", bun.getName()));
         expected.append(String.format("= %s %s =%n",
-                burger.ingredients
-                        .get(0)
-                        .getType()
-                        .toString()
-                        .toLowerCase(),
-                burger.ingredients
-                        .get(0)
-                        .getName()));
+                burger.ingredients.get(0).getType().toString().toLowerCase(),
+                burger.ingredients.get(0).getName()));
         expected.append(String.format("(==== %s ====)%n", "black bun"));
         expected.append(String.format("%nPrice: %f%n", burger.getPrice()));
         String expectedReceipt = expected.toString();
         String actual = burger.getReceipt();
-        assertEquals("Ошибка", expectedReceipt, actual);
+        assertEquals("Ошибка: рецепты не равны", expectedReceipt, actual);
     }
 }
